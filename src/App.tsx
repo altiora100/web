@@ -17,6 +17,7 @@ import CallToAction from './components/CallToAction';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import WhatsappFloat from './components/WhatsappFloat';
+import MobileCta from './components/MobileCta';
 import SystemDetail from './pages/SystemDetail';
 import DemoPage from './pages/DemoPage';
 import NotFound from './pages/NotFound';
@@ -75,6 +76,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsappFloat />
+        <MobileCta />
       </BrowserRouter>
     </ThemeProvider>
   );

@@ -71,9 +71,19 @@ export default function Systems() {
                   </Box>
                 </Box>
                 <CardContent sx={{ p: 3 }}>
-                  <Typography sx={{ color: '#475569', mb: 3, lineHeight: 1.7, fontSize: '0.9rem' }}>
+                  <Typography sx={{ color: '#475569', mb: 2, lineHeight: 1.7, fontSize: '0.9rem' }}>
                     {system.description}
                   </Typography>
+                  {system.priceFrom && (
+                    <Typography sx={{ color: system.color, fontWeight: 800, fontSize: '0.8rem', mb: 3 }}>
+                      Desde {system.priceFrom} COP/mes
+                    </Typography>
+                  )}
+                  {!system.priceFrom && (
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.8rem', mb: 3, color: '#64748b' }}>
+                      Plan personalizado · Cotiza tu precio
+                    </Typography>
+                  )}
                   <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
                     {system.features.map((feat) => (
                       <Box key={feat.text} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

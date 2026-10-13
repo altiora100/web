@@ -3,7 +3,9 @@ import { Box, Typography, Button, Container, Grid, Card, CardContent, Chip } fro
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SectionChip from './SectionChip';
 import { PRICING, SYSTEMS } from '../data/content';
-import { scrollToSection } from '../utils/scroll';
+import { waLink } from '../constants';
+
+const GUARANTEES = ['7 días de prueba gratis', 'Sin permanencia', 'Cancela cuando quieras'];
 
 export default function Pricing() {
   const pricedSystems = SYSTEMS.filter((s) => PRICING[s.id]);
@@ -15,7 +17,7 @@ export default function Pricing() {
   return (
     <Box id="precios" sx={{ py: 10, bgcolor: '#f8fafc' }}>
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 2 }}>
           <SectionChip label="Precios" />
           <Typography variant="h4" sx={{ fontWeight: 800, color: '#0f172a', mb: 1.5 }}>
             Un plan para cada etapa
@@ -23,6 +25,18 @@ export default function Pricing() {
           <Typography sx={{ color: '#64748b', maxWidth: 600, mx: 'auto' }}>
             Precios mensuales en COP, sin permanencia. Todos incluyen actualizaciones automáticas.
           </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', flexWrap: 'wrap', mb: 5 }}>
+          {GUARANTEES.map((g) => (
+            <Chip
+              key={g}
+              icon={<CheckCircleIcon sx={{ fontSize: 16 }} />}
+              label={g}
+              size="small"
+              sx={{ bgcolor: '#ecfdf5', color: '#059669', fontWeight: 600, border: '1px solid #a7f3d0' }}
+            />
+          ))}
         </Box>
 
         {/* Selector de sistema */}
@@ -100,7 +114,9 @@ export default function Pricing() {
                   <Button
                     variant={plan.highlighted ? 'contained' : 'outlined'}
                     fullWidth
-                    onClick={() => scrollToSection('contacto')}
+                    href={waLink(`Hola Altiora, me interesa el plan ${plan.name} (${plan.price}/mes) de ${system?.title ?? ''}.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     sx={{
                       borderRadius: 2,
                       textTransform: 'none',
@@ -122,7 +138,7 @@ export default function Pricing() {
         {system && (
           <Typography sx={{ textAlign: 'center', color: '#64748b', fontSize: '0.85rem', mt: 4 }}>
             Precios de <strong>{system.title}</strong>. ¿Buscas {others.map((o) => o.title).join(' o ')}? Son planes personalizados:{' '}
-            <Box component="span" onClick={() => scrollToSection('contacto')} sx={{ color: '#4f46e5', fontWeight: 700, cursor: 'pointer' }}>
+            <Box component="a" href={waLink('Hola Altiora, quiero una cotización para Barbería u Hoteles.')} target="_blank" rel="noopener noreferrer" sx={{ color: '#4f46e5', fontWeight: 700, cursor: 'pointer' }}>
               pide tu cotización aquí
             </Box>
             .

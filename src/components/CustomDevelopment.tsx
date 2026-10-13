@@ -20,9 +20,7 @@ import SendIcon from '@mui/icons-material/Send';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 import SectionChip from './SectionChip';
-
-const WHATSAPP_NUMBER = '573001234567';
-const CONTACT_EMAIL = 'altiora100@gmail.com';
+import { waLink, CONTACT_EMAIL } from '../constants';
 
 const SERVICES = [
   { icon: <CodeIcon />, title: 'Sistemas a medida', desc: 'ERP, inventarios, reservas y gestión interna tal como operas.' },
@@ -59,7 +57,6 @@ export default function CustomDevelopment() {
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const rawBody = `Hola Altiora, necesito un desarrollo:\n\n- Nombre: ${form.name}\n- Email: ${form.email}\n- Tipo: ${form.type}\n- Presupuesto: ${form.budget}\n- Detalle: ${form.description}`;
-  const waText = encodeURIComponent(rawBody);
   const mailBody = encodeURIComponent(rawBody);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -155,7 +152,7 @@ export default function CustomDevelopment() {
                       <Button
                         variant="contained"
                         startIcon={<WhatsAppIcon />}
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`}
+                        href={waLink(rawBody)}
                         target="_blank"
                         sx={{ textTransform: 'none', bgcolor: '#16a34a', '&:hover': { bgcolor: '#15803d' } }}
                       >

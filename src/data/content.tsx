@@ -42,6 +42,8 @@ export interface System {
   title: string;
   subtitle: string;
   description: string;
+  /** Precio mensual desde (COP). Sin precio → plan personalizado. */
+  priceFrom?: string;
   icon: ReactNode;
   /** Logo real del sistema para fondos de color (siempre variante blanca) */
   Logo: ComponentType<{ size?: number }>;
@@ -78,6 +80,7 @@ export const SYSTEMS: System[] = [
     subtitle: 'Sistema integral para clínicas dentales',
     description:
       'Administra tu clínica de odontología de forma completa. Desde la agenda de pacientes hasta el odontograma digital, facturación y reportes detallados.',
+    priceFrom: '$70.000',
     icon: <LocalHospitalIcon sx={{ fontSize: 32 }} />,
     Logo: ({ size = 44 }: { size?: number }) => <DentalToothLogo size={size} variant="white" />,
     color: '#0891b2',
@@ -102,6 +105,7 @@ export const SYSTEMS: System[] = [
     subtitle: 'Control total de tu negocio',
     description:
       'Gestiona inventarios, facturación, cuentas por cobrar y reportes financieros. Todo lo que necesitas para dirigir tu empresa en un solo lugar.',
+    priceFrom: '$55.000',
     icon: <PointOfSaleIcon sx={{ fontSize: 32 }} />,
     Logo: ({ size = 44 }: { size?: number }) => <CommercialLogo size={size} />,
     color: '#7c3aed',
@@ -219,8 +223,7 @@ export const CONTACT_INFO = [
   { icon: <LocationOnIcon />, label: 'Colombia', sub: 'Servicio en toda Latinoamérica' },
 ];
 
-export const FOOTER_PRODUCT_LINKS = ['Gestión Odontológica', 'Gestión Comercial', 'Gestión Barbería', 'Gestión Hotelera', 'Desarrollo a Medida', 'Precios', 'Demo'];
-export const FOOTER_COMPANY_LINKS = ['Quiénes Somos', 'Blog', 'Carreras', 'Contacto'];
+export const FOOTER_COMPANY_LINKS = ['Quiénes Somos', 'Precios', 'Contacto'];
 export const FOOTER_LEGAL_LINKS = ['Política de Privacidad', 'Términos de Uso'];
 
 export interface Testimonial {
@@ -230,6 +233,8 @@ export interface Testimonial {
   system: string;
   initials: string;
   color: string;
+  /** Resultado cuantificable que refuerza el testimonio. */
+  metric: string;
 }
 
 // TODO: reemplazar con clientes reales (nombre, negocio y resultado verificable)
@@ -241,6 +246,7 @@ export const TESTIMONIALS: Testimonial[] = [
     system: 'Gestión Odontológica',
     initials: 'CM',
     color: '#0891b2',
+    metric: '-60% ausencias en 30 días',
   },
   {
     quote: 'El panel me muestra las ventas del día y el stock bajo sin abrir Excel. Cierro caja en minutos, antes me tomaba una hora.',
@@ -249,6 +255,7 @@ export const TESTIMONIALS: Testimonial[] = [
     system: 'Gestión Comercial',
     initials: 'JC',
     color: '#4f46e5',
+    metric: 'Caja cerrada en 10 minutos',
   },
   {
     quote: 'Los clientes reservan solos desde Instagram y llegan puntuales. Mis sillas no se desocupan entre semana.',
@@ -257,6 +264,7 @@ export const TESTIMONIALS: Testimonial[] = [
     system: 'Gestión Barbería',
     initials: 'DR',
     color: '#b45309',
+    metric: 'Sillas llenas entre semana',
   },
 ];
 

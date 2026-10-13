@@ -1,4 +1,4 @@
-import { Box, Typography, Container, Grid, Card, CardContent, Avatar } from '@mui/material';
+import { Box, Typography, Container, Grid, Card, CardContent, Avatar, Chip } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import SectionChip from './SectionChip';
@@ -41,9 +41,14 @@ export default function Testimonials() {
                       <StarIcon key={s} sx={{ fontSize: 16, color: '#f59e0b' }} />
                     ))}
                   </Box>
-                  <Typography sx={{ color: '#334155', lineHeight: 1.7, fontSize: '0.9rem', mb: 3, flexGrow: 1 }}>
+                  <Typography sx={{ color: '#334155', lineHeight: 1.7, fontSize: '0.9rem', mb: 2, flexGrow: 1 }}>
                     "{t.quote}"
                   </Typography>
+                  <Chip
+                    label={t.metric}
+                    size="small"
+                    sx={{ fontWeight: 800, fontSize: '0.72rem', color: '#059669', bgcolor: '#ecfdf5', border: '1px solid #a7f3d0', mb: 3, alignSelf: 'flex-start' }}
+                  />
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Avatar sx={{ bgcolor: t.color, width: 44, height: 44, fontWeight: 700 }}>{t.initials}</Avatar>
                     <Box>

@@ -2,9 +2,12 @@ import { Box, Typography, Button, Container, Grid, Chip } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CodeIcon from '@mui/icons-material/Code';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { useNavigate } from 'react-router-dom';
 import { scrollToSection } from '../utils/scroll';
 import { SYSTEMS } from '../data/content';
+import { waLink } from '../constants';
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -71,7 +74,7 @@ export default function Hero() {
               </Box>
               .
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 4 }}>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
               <Button
                 variant="contained"
                 size="large"
@@ -87,6 +90,24 @@ export default function Hero() {
                 }}
               >
                 Explorar Sistemas
+              </Button>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<WhatsAppIcon />}
+                href={waLink('Hola Altiora, quiero información sobre los sistemas de gestión.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  px: 4,
+                  py: 1.6,
+                  fontSize: '0.95rem',
+                  bgcolor: '#22c55e',
+                  boxShadow: '0 8px 32px rgba(34,197,94,0.35)',
+                  '&:hover': { bgcolor: '#16a34a', boxShadow: '0 12px 40px rgba(34,197,94,0.45)' },
+                }}
+              >
+                WhatsApp
               </Button>
               <Button
                 variant="outlined"
@@ -107,15 +128,11 @@ export default function Hero() {
                 Cotizar mi desarrollo
               </Button>
             </Box>
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-              {[
-                ['4', 'sistemas listos'],
-                ['100%', 'en la nube'],
-                ['24/7', 'soporte'],
-              ].map(([v, l]) => (
-                <Box key={l} sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                  <Typography sx={{ fontWeight: 800, fontSize: '1.3rem', color: '#fff' }}>{v}</Typography>
-                  <Typography sx={{ fontSize: '0.8rem', color: '#64748b' }}>{l}</Typography>
+            <Box sx={{ display: 'flex', gap: 2.5, flexWrap: 'wrap' }}>
+              {['Hecho en Colombia', 'Sin permanencia', 'En la nube · Sin instalación', 'Soporte 24/7'].map((t) => (
+                <Box key={t} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <CheckCircleIcon sx={{ fontSize: 14, color: '#4ade80' }} />
+                  <Typography sx={{ fontSize: '0.78rem', color: '#94a3b8' }}>{t}</Typography>
                 </Box>
               ))}
             </Box>

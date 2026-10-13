@@ -1,16 +1,18 @@
-import { Box, Tooltip } from '@mui/material';
+import { Box, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { waLink, WA_DEFAULT_TEXT } from '../constants';
 
-// TODO: reemplazar con el número real de ventas
-const WHATSAPP_NUMBER = '573001234567';
-const TEXT = encodeURIComponent('Hola Altiora, quiero información sobre sus sistemas.');
-
+// En móvil queda oculto: su lugar lo ocupa la barra fija de CTA (MobileCta).
 export default function WhatsappFloat() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  if (isMobile) return null;
+
   return (
     <Tooltip title="Escríbenos por WhatsApp" placement="left">
       <Box
         component="a"
-        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${TEXT}`}
+        href={waLink(WA_DEFAULT_TEXT)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp"

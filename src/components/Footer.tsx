@@ -1,14 +1,69 @@
-import { Box, Typography, Button, Container, Grid, IconButton, Divider } from '@mui/material';
+import { useState } from 'react';
+import { Box, Typography, Button, Container, Grid, IconButton, Divider, CircularProgress } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { FOOTER_COMPANY_LINKS, FOOTER_LEGAL_LINKS, FOOTER_PRODUCT_LINKS } from '../data/content';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { FOOTER_LEGAL_LINKS } from '../data/content';
+import { CONTACT_EMAIL } from '../constants';
+import { scrollToSection } from '../utils/scroll';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const linkSx = { fontSize: '0.83rem', cursor: 'pointer', '&:hover': { color: '#3b82f6' } } as const;
+type NLStatus = 'idle' | 'sending' | 'done' | 'error';
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<NLStatus>('idle');
+
+  const goSection = (id: string) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => scrollToSection(id), 150);
+    } else {
+      scrollToSection(id);
+    }
+  };
+
+  const productLinks: { label: string; action: () => void }[] = [
+    { label: 'Gestión Odontológica', action: () => navigate('/sistemas/dental') },
+    { label: 'Gestión Comercial', action: () => navigate('/sistemas/commercial') },
+    { label: 'Gestión Barbería', action: () => navigate('/sistemas/barberia') },
+    { label: 'Gestión Hotelera', action: () => navigate('/sistemas/hotel') },
+    { label: 'Desarrollo a Medida', action: () => goSection('desarrollo-medida') },
+    { label: 'Precios', action: () => goSection('precios') },
+    { label: 'Demo', action: () => navigate('/demo/commercial') },
+  ];
+
+  const companyLinks: { label: string; action: () => void }[] = [
+    { label: 'Quiénes Somos', action: () => goSection('quienes-somos') },
+    { label: 'Precios', action: () => goSection('precios') },
+    { label: 'Contacto', action: () => goSection('contacto') },
+  ];
+
+  const handleNewsletter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+      setStatus('error');
+      return;
+    }
+    setStatus('sending');
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: 'Newsletter Altiora: ' + email.trim(), Email: email.trim() }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setStatus('done');
+    } catch {
+      setStatus('error');
+    }
+  };
+
   return (
-    <Box sx={{ bgcolor: '#0f172a', color: '#94a3b8', py: 6 }}>
+    <Box sx={{ bgcolor: '#0f172a', color: '#94a3b8', py: { xs: 12, md: 6 } }}>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
@@ -22,8 +77,12 @@ export default function Footer() {
               Soluciones tecnológicas que impulsan el crecimiento de tu negocio.
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              {[FacebookIcon, LinkedInIcon, InstagramIcon].map((Icon, i) => (
-                <IconButton key={i} sx={{ color: '#64748b', '&:hover': { color: '#3b82f6' } }}>
+              {[
+                { Icon: FacebookIcon, href: 'https://facebook.com' },
+                { Icon: LinkedInIcon, href: 'https://linkedin.com' },
+                { Icon: InstagramIcon, href: 'https://instagram.com' },
+              ].map(({ Icon, href }, i) => (
+                <IconButton key={i} href={href} target="_blank" rel="noopener noreferrer" sx={{ color: '#64748b', '&:hover': { color: '#3b82f6' } }}>
                   <Icon fontSize="small" />
                 </IconButton>
               ))}
@@ -32,9 +91,13 @@ export default function Footer() {
           <Grid item xs={6} md={2}>
             <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff', mb: 2 }}>Producto</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {FOOTER_PRODUCT_LINKS.map((item) => (
-                <Typography key={item} sx={linkSx}>
-                  {item}
+              {productLinks.map((item) => (
+                <Typography
+                  key={item.label}
+                  onClick={item.action}
+                  sx={{ fontSize: '0.83rem', cursor: 'pointer', '&:hover': { color: '#3b82f6' } }}
+                >
+                  {item.label}
                 </Typography>
               ))}
             </Box>
@@ -42,9 +105,13 @@ export default function Footer() {
           <Grid item xs={6} md={2}>
             <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff', mb: 2 }}>Empresa</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {FOOTER_COMPANY_LINKS.map((item) => (
-                <Typography key={item} sx={linkSx}>
-                  {item}
+              {companyLinks.map((item) => (
+                <Typography
+                  key={item.label}
+                  onClick={item.action}
+                  sx={{ fontSize: '0.83rem', cursor: 'pointer', '&:hover': { color: '#3b82f6' } }}
+                >
+                  {item.label}
                 </Typography>
               ))}
             </Box>
@@ -54,37 +121,58 @@ export default function Footer() {
               Suscríbete a nuestro newsletter
             </Typography>
             <Typography sx={{ fontSize: '0.83rem', mb: 2 }}>Recibe las últimas novedades y actualizaciones.</Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Box
-                component="input"
-                placeholder="tu@email.com"
-                sx={{
-                  flex: 1,
-                  p: 1.5,
-                  borderRadius: 1.5,
-                  border: '1px solid #334155',
-                  bgcolor: '#1e293b',
-                  color: '#fff',
-                  fontSize: '0.85rem',
-                  outline: 'none',
-                  '&:focus': { borderColor: '#3b82f6' },
-                }}
-              />
-              <Button
-                variant="contained"
-                sx={{ borderRadius: 1.5, textTransform: 'none', fontWeight: 600, bgcolor: '#3b82f6', '&:hover': { bgcolor: '#2563eb' } }}
-              >
-                Suscribir
-              </Button>
-            </Box>
+            {status === 'done' ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#4ade80', fontSize: '0.85rem' }}>
+                <CheckCircleIcon sx={{ fontSize: 18 }} />
+                ¡Suscripción registrada! Te contactaremos pronto.
+              </Box>
+            ) : (
+              <Box component="form" onSubmit={handleNewsletter} sx={{ display: 'flex', gap: 1 }}>
+                <Box
+                  component="input"
+                  type="email"
+                  required
+                  placeholder="tu@email.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (status === 'error') setStatus('idle');
+                  }}
+                  sx={{
+                    flex: 1,
+                    p: 1.5,
+                    borderRadius: 1.5,
+                    border: `1px solid ${status === 'error' ? '#ef4444' : '#334155'}`,
+                    bgcolor: '#1e293b',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    outline: 'none',
+                    '&:focus': { borderColor: '#3b82f6' },
+                  }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={status === 'sending'}
+                  sx={{ borderRadius: 1.5, textTransform: 'none', fontWeight: 600, bgcolor: '#3b82f6', '&:hover': { bgcolor: '#2563eb' } }}
+                >
+                  {status === 'sending' ? <CircularProgress size={18} color="inherit" /> : 'Suscribir'}
+                </Button>
+              </Box>
+            )}
+            {status === 'error' && (
+              <Typography sx={{ fontSize: '0.78rem', color: '#f87171', mt: 1 }}>
+                Ingresa un email válido para suscribirte.
+              </Typography>
+            )}
           </Grid>
         </Grid>
         <Divider sx={{ borderColor: '#1e293b', my: 4 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-          <Typography sx={{ fontSize: '0.8rem' }}>© 2024 Altiora. Todos los derechos reservados.</Typography>
+          <Typography sx={{ fontSize: '0.8rem' }}>© 2026 Altiora · Hecho en Colombia</Typography>
           <Box sx={{ display: 'flex', gap: 3 }}>
             {FOOTER_LEGAL_LINKS.map((item) => (
-              <Typography key={item} sx={{ fontSize: '0.8rem', cursor: 'pointer', '&:hover': { color: '#3b82f6' } }}>
+              <Typography key={item} sx={{ fontSize: '0.8rem' }}>
                 {item}
               </Typography>
             ))}
